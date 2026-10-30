@@ -39,3 +39,22 @@ def test_T002_S2_login_wrong_password(driver, registered_user):
 def test_T002_S3_login_unregistered_email(driver):
     login(driver, unique_email(), DEFAULT_PASSWORD)
     assert text_present(driver, "No match for E-Mail Address and/or Password")
+
+# ===== T003 - F11 Forgotten Password ======================================
+
+def request_reset(driver, email):
+    driver.get(url("account/forgotten"))
+    fill(driver, "email", email)
+    submit_main_form(driver)
+
+def test_T003_S1_reset_registered_email(driver, registered_user):
+    request_reset(driver, registered_user["email"])
+    assert text_present(driver, "confirmation link")
+
+def test_T003_S2_reset_unregistered_email(driver):
+    request_reset(driver, unique_email())
+    assert text_present(driver, "was not found")
+
+def test_T003_S3_reset_malformed_email(driver):
+    request_reset(driver, "not-an-email") # Malformed input must never produce the success message
+    assert not text_present(driver, "confirmation link", timeout=3)
