@@ -25,3 +25,17 @@ def test_T001_S3_register_password_mismatch(driver):
     assert text_present(driver, "Password confirmation does not match password")
 
 
+# ===== T002 - F2 User Login ===============================================
+
+def test_T002_S1_login_valid_credentials(driver, registered_user): # Depends on F1: the account is created by the fixture
+    login(driver, registered_user["email"], registered_user["password"])
+    assert "account/account" in driver.current_url
+    assert text_present(driver, "My Account")
+
+def test_T002_S2_login_wrong_password(driver, registered_user):
+    login(driver, registered_user["email"], "WrongPass#1")
+    assert text_present(driver, "No match for E-Mail Address and/or Password")
+
+def test_T002_S3_login_unregistered_email(driver):
+    login(driver, unique_email(), DEFAULT_PASSWORD)
+    assert text_present(driver, "No match for E-Mail Address and/or Password")
