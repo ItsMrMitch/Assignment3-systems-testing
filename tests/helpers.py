@@ -1,7 +1,6 @@
-"""Shared helper functions for the LambdaTest eCommerce Playground test suite.
+"""helper functions for the LambdaTest eCommerce Playground test suite.
 
 Site under test: https://opencart.abstracta.us (OpenCart 3 demo store).
-Every helper is deliberately small so each test case stays easy to read.
 """
 import re
 import time

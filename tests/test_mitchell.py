@@ -1,21 +1,25 @@
-"""Member 1 - F1 User Registration (T001), F2 User Login (T002), F11 Forgotten Password (T003)."""
+"""Member 1 - F1 User Registration (T001), F2 User Login (T002), F11 Forgotten Password (T003).
+driver arguement is a fresh chrome browser created by confest.py
+"""
 from helpers import (DEFAULT_PASSWORD, fill, login, logout, register_user,
                      submit_main_form, text_present, unique_email, url)
 
 
 # ===== T001 - F1 User Registration ========================================
 def test_T001_S1_register_valid_new_user(driver):
-    # Valid details + a never-used email -> account is created
-    register_user(driver, unique_email())
+     # Scenario 1 (success): valid details and an email that has never been used
+    register_user(driver, unique_email()) # fills in and submits the registration form
+    # The site should confirm the account was created
     assert text_present(driver, "Your new account has been successfully Created")
 
 
 def test_T001_S2_register_duplicate_email(driver):
-    # Register once, log out, then try to register again with the same email
-    email = unique_email()
-    register_user(driver, email)
-    logout(driver)
-    register_user(driver, email)
+    # Scenario 2 (failure): registering with an email that already has an account
+    email = unique_email()  # one email used for both registrations
+    register_user(driver, email)  # first registration creates the account
+    logout(driver)   # leave the account so the form can be used again
+    register_user(driver, email)   # second registration reuses the same email
+    # The site should refuse and warn that the email is already registered
     assert text_present(driver, "E-Mail Address is already registered")
 
 
